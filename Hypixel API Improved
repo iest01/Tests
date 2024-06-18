@@ -1,17 +1,4 @@
-import requests as req # import the requests HTTP library to use get
-
-key = "add-your-key-here", # paste your hypixel API key here
-uuid = "add-your-minecraft-uuid-here" # paste your minecraft uuid (find it here: https://mcuuid.net/)
-header = {"key":{key}, "uuid":{uuid}} # creating a header to shorten the url and improve code reusability (it applies this header at the end of the requested API url)
-
-response = req.get("https://api.hypixel.net/skyblock/profiles?", params=header) # sending get request to the specified API url, in this case the skyblock player profile
-data = response.json() # initialising data variable which is just the response of the API in json
-
-purse = data["profiles"][0]["members"]["330ed8459b9a425f89cb2f8217437df4"]["coin_purse"] # example of initialising a variable for specific values (in this csae our purse value).
-# it must iterate through each field in the json array to return the desired category (coin purse)
-print ("Purse Balance: ")
-print(purse)
-
+import requests as req
 
 def openMenu():
     ans=True
@@ -36,12 +23,15 @@ while ans:
 
 def enterDetails():
     print("Enter your API key")
+    global key 
     key = input()
     print("Enter your UUID (visit here if you don't know: https://mcuuid.net/ )")
+    global uuid # set as global variable so that it can be used in other functions 
     uuid = input()
 
     header = {"key":{key}, "uuid":{uuid}}
     response = req.get("https://api.hypixel.net/skyblock/profiles?", params=header)
+    global data 
     data = response.json()
     print("Loading your data")
 
@@ -49,9 +39,9 @@ def enterDetails():
     openMenu()
 
 
-    def purseValue():
+def purseValue():
         purse = data["profiles"][0]["members"][{uuid}]["coin_purse"] # might have to use the trimmed uuid remember to test if this is the case
         print(purse)
-
-
     
+def skillLevels():
+        skills = data["profiles"][0]["members"][{uuid}] # search up the rest of the route on the json results
