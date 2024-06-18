@@ -13,45 +13,6 @@ print ("Purse Balance: ")
 print(purse)
 
 
-def openMenu():
-    ans=True
-while ans:
-    print ("""
-    1. View Purse Value
-    2. View Skill Levels
-    3. Exit
-    """)
-    ans=input("What would you like to do? ") 
-    if ans=="1": 
-      print("\n Here is your purse value. Remember to deposit at the bank so you don't lose it!") 
-    elif ans=="2":
-      print("\n Here are your skill levels!") 
-    elif ans=="3":
-      print("\n See you later!") 
-    elif ans !="":
-      print("\n Not Valid Choice Try again") 
-
-
-
-
-def enterDetails():
-    print("Enter your API key")
-    key = input()
-    print("Enter your UUID (visit here if you don't know: https://mcuuid.net/ )")
-    uuid = input()
-
-    header = {"key":{key}, "uuid":{uuid}}
-    response = req.get("https://api.hypixel.net/skyblock/profiles?", params=header)
-    data = response.json()
-    print("Loading your data")
-
-    print("\n ====MENU====")
-    openMenu()
-
-
-    def purseValue():
-        purse = data["profiles"][0]["members"][{uuid}]["coin_purse"] # might have to use the trimmed uuid remember to test if this is the case
-        print(purse)
 
 
     
