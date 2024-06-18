@@ -1,6 +1,6 @@
 import requests as req
 
-def openMenu():
+def openMenu(): # menu function to allow the user to access the information they want
     ans=True
 while ans:
     print ("""
@@ -8,7 +8,7 @@ while ans:
     2. View Skill Levels
     3. Exit
     """)
-    ans=input("What would you like to do? ") 
+    ans=input("Please enter the corresponding number: ") 
     if ans=="1": 
       print("\n Here is your purse value. Remember to deposit at the bank so you don't lose it!") 
     elif ans=="2":
@@ -16,7 +16,7 @@ while ans:
     elif ans=="3":
       print("\n See you later!") 
     elif ans !="":
-      print("\n Not Valid Choice Try again") 
+      print("\n Please enter a valid option from the list above!") 
 
 
 
@@ -24,19 +24,20 @@ while ans:
 def enterDetails():
     print("Enter your API key")
     global key 
-    key = input()
+    key = input() # input function allows the user to enter their API key
     print("Enter your UUID (visit here if you don't know: https://mcuuid.net/ )")
     global uuid # set as global variable so that it can be used in other functions 
     uuid = input()
 
     header = {"key":{key}, "uuid":{uuid}}
-    response = req.get("https://api.hypixel.net/skyblock/profiles?", params=header)
+    response = req.get("https://api.hypixel.net/skyblock/profiles?", params=header) # creating a header to shorten the url 
+    # and improve code reusability (it applies this header at the end of the requested API url)
     global data 
-    data = response.json()
+    data = response.json() # initialising a variable of the json response
     print("Loading your data")
 
     print("\n ====MENU====")
-    openMenu()
+    openMenu() # calling the openMenu function once the API key and UUID has been entered (none of the requests after this will work without them)
 
 
 def purseValue():
