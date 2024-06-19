@@ -1,48 +1,58 @@
 import requests as req
 
-def openMenu(): # menu function to allow the user to access the information they want
-    ans=True
-while ans:
-    print ("""
-    1. View Purse Value
-    2. View Skill Levels
-    3. Exit
-    """)
-    ans=input("Please enter the corresponding number: ") 
-    if ans=="1": 
-      print("\n Here is your purse value. Remember to deposit at the bank so you don't lose it!") 
-    elif ans=="2":
-      print("\n Here are your skill levels!") 
-    elif ans=="3":
-      print("\n See you later!") 
-    elif ans !="":
-      print("\n Please enter a valid option from the list above!") 
-
-
-
-
 def enterDetails():
-    print("Enter your API key")
-    global key 
-    key = input() # input function allows the user to enter their API key
-    print("Enter your UUID (visit here if you don't know: https://mcuuid.net/ )")
-    global uuid # set as global variable so that it can be used in other functions 
-    uuid = input()
+  global key, uuid # set as global variable so that it can be used in other functions 
+  key = input("Enter your API key: ") # input function allows the user to enter their API key
+  uuid = input("Enter your UUID (visit here if you don't know: https://mcuuid.net/ ): ")
+  print("\nLoading the menu!")
+  
 
-    header = {"key":{key}, "uuid":{uuid}}
-    response = req.get("https://api.hypixel.net/skyblock/profiles?", params=header) # creating a header to shorten the url 
-    # and improve code reusability (it applies this header at the end of the requested API url)
-    global data 
-    data = response.json() # initialising a variable of the json response
-    print("Loading your data")
-
-    print("\n ====MENU====")
-    openMenu() # calling the openMenu function once the API key and UUID has been entered (none of the requests after this will work without them)
-
+def fetchData():
+  global key, uuid
+  header = {"key":{key}, "uuid":{uuid}} # creating a header to shorten the url and improve code reusability 
+  response = req.get("https://api.hypixel.net/skyblock/profiles?", params=header) # request data from the specific endpoint and apply the header
+    
+  print(f"Request URL: {response.url}")  # Requests the full url and prints it for debugging purposes
+  print(f"Response Status Code: {response.status_code}")  # Grabs the response status code and prints it (Status Code: 200 means everything is working!)
+  data = response.json() # initialising a variable of the json response
+  return data
 
 def purseValue():
-        purse = data["profiles"][0]["members"][{uuid}]["coin_purse"] # might have to use the trimmed uuid remember to test if this is the case
-        print(purse)
+  data = fetchData() # initialise the data variable as the json response
+  profile = data["profiles"][0] # view the first profile in the response (there's only one profile but we have to declare this anyway)
+  purse = profile["members"][uuid]["coin_purse"] # iterate through the branches to the category we want
+  print(purse)
     
 def skillLevels():
-        skills = data["profiles"][0]["members"][{uuid}] # search up the rest of the route on the json results
+  data = fetchData()
+  profile = ["profiles"][0]
+  skills = profile["members"][uuid] # rest of the route is a bit funky so will have to fix this and other options later
+  print(skills)
+
+def main(): # menu function
+  open=True
+  while open:
+    print ("""
+    1. Enter Key and UUID (Please select this option first if you haven't entered your details)
+    2. View Purse Value
+    3. View Skill Levels
+    4. Exit
+    """)
+    choice = input("Please enter the corresponding number: ") 
+    if choice=="1": 
+      enterDetails()
+    elif choice=="2":
+      print("\n Here is your purse value. Remember to deposit at the bank so you don't lose it!") 
+      purseValue()
+    elif choice=="3":
+      print("\n Here are your skill levels!") 
+      skillLevels()
+    elif choice=="4":
+      print("\n See you later!") 
+      open = False
+    else:
+      print("\n Please enter a valid option from the list above!") 
+      
+if __name__ == "__main__": # this idiom is to ensure the menu function is executed first when the program is ran directly
+    main()
+  
