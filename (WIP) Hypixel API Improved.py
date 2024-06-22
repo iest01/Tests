@@ -1,9 +1,10 @@
 import requests as req
+from prettytable import PrettyTable
 
 def enterDetails():
   global key, uuid # set as global variable so that it can be used in other functions 
   key = input("Enter your API key: ") # input function allows the user to enter their API key
-  uuid = input("Enter your UUID (visit here if you don't know: https://mcuuid.net/ ): ")
+  uuid = input("Enter your trimmed UUID (visit here if you don't know: https://mcuuid.net/ ): ") # trimmed uuid must be used!
   print("\nLoading the menu!")
   
 
@@ -25,8 +26,18 @@ def purseValue():
     
 def skillLevels():
   data = fetchData()
-  profile = ["profiles"][0]
-  skills = profile["members"][uuid] # rest of the route is a bit funky so will have to fix this and other options later
+  profile = data["profiles"][0]
+  
+  skills = { # returning each skill level individually and storing them in a dictionary, as the json response had not grouped these inside of a category. Scalable solution!
+    "foraging": profile["members"][uuid]["experience_skill_foraging"], 
+    "runecrafting": profile["members"][uuid]["experience_skill_runecrafting"],
+    "taming": profile["members"][uuid]["experience_skill_taming"],
+    "combat": profile["members"][uuid]["experience_skill_combat"],
+    "enchanting": profile["members"][uuid]["experience_skill_enchanting"],
+    "fishing": profile["members"][uuid]["experience_skill_fishing"],
+    "farming": profile["members"][uuid]["experience_skill_farming"],
+    "mining": profile["members"][uuid]["experience_skill_mining"]
+  }
   print(skills)
 
 def main(): # menu function
