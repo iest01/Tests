@@ -4,7 +4,7 @@ from prettytable import PrettyTable
 def enterDetails():
   global key, uuid # set as global variable so that it can be used in other functions 
   key = input("Enter your API key: ") # input function allows the user to enter their API key
-  uuid = input("Enter your trimmed UUID (visit here if you don't know: https://mcuuid.net/ ): ") # trimmed uuid must be used!
+  uuid = input("Enter your trimmed UUID (visit here if you don't know: https://mcuuid.net/ ): ") # trimmed uuid must be used due to formatting!
   print("\nLoading the menu!")
   
 
@@ -28,7 +28,7 @@ def skillLevels():
   data = fetchData()
   profile = data["profiles"][0]
   
-  skills = { # returning each skill level individually and storing them in a dictionary, as the json response had not grouped these inside of a category. Scalable solution!
+  skills = { # returning each skill level individually and storing them in a "skills" dictionary, as the json response had not grouped these inside of a category. Scalable solution!
     "foraging": profile["members"][uuid]["experience_skill_foraging"], 
     "runecrafting": profile["members"][uuid]["experience_skill_runecrafting"],
     "taming": profile["members"][uuid]["experience_skill_taming"],
@@ -38,7 +38,15 @@ def skillLevels():
     "farming": profile["members"][uuid]["experience_skill_farming"],
     "mining": profile["members"][uuid]["experience_skill_mining"]
   }
-  print(skills)
+  
+  table = PrettyTable() # creating a table for better visual clarity
+  table.field_names = ["Skill", "Experience"] # naming the 2 fields (will add a 3rd field for specific levels once I figure out how to fetch and compare against another api endpoint)
+    
+  for skill, Exp in skills.items(): # iterate through each key-value pair within the skills dictionary. Each iteration applies a key (skill) and applies a value (xp) to this 
+      table.add_row([skill, Exp]) # adds a row for each of the key-value pairs iterated in the above line
+
+  print(table) # prints the table instead of the raw values
+  
 
 def main(): # menu function
   open=True
