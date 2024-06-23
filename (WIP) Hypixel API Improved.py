@@ -57,10 +57,10 @@ def main(): # menu function
     3. View Skill Levels
     4. Exit
     """)
-    choice = input("Please enter the corresponding number: ") 
-    if choice=="1": 
+    choice = input("Please enter the corresponding number: ") # takes keyboard input e.g. 1/2/3/4
+    if choice=="1": # if their choice is 1, then run the function below
       enterDetails()
-    elif choice=="2":
+    elif choice=="2": # if their choice is 2, etc, etc
       print("\n Here is your purse value. Remember to deposit at the bank so you don't lose it!") 
       purseValue()
     elif choice=="3":
@@ -70,7 +70,7 @@ def main(): # menu function
       print("\n See you later!") 
       open = False
     else:
-      print("\n Please enter a valid option from the list above!") 
+      print("\n Please enter a valid option from the list above!") # data validation (prevents them entering an invalid choice and returns to the menu)
       
 if __name__ == "__main__": # this idiom is to ensure the menu function is executed first when the program is ran directly
     main()
