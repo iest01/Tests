@@ -1,5 +1,6 @@
-import requests as req
-from prettytable import PrettyTable
+import requests as req # allows the usage of requests through the request library e.g. get
+from prettytable import PrettyTable # table formatting
+
 
 def enterDetails():
   global key, uuid # set as global variable so that it can be used in other functions 
@@ -9,20 +10,61 @@ def enterDetails():
   
 
 def fetchData():
-  global key, uuid
+  key, uuid
   header = {"key":{key}, "uuid":{uuid}} # creating a header to shorten the url and improve code reusability 
   response = req.get("https://api.hypixel.net/skyblock/profiles?", params=header) # request data from the specific endpoint and apply the header
     
   print(f"Request URL: {response.url}")  # Requests the full url and prints it for debugging purposes
-  print(f"Response Status Code: {response.status_code}")  # Grabs the response status code and prints it (Status Code: 200 means everything is working!)
-  data = response.json() # initialising a variable of the json response
+  print(f"Response Status Code: {response.status_code}")  # (Status Code: 200 means everything is working!)
+  data = response.json()
   return data
 
 def purseValue():
-  data = fetchData() # initialise the data variable as the json response
-  profile = data["profiles"][0] # view the first profile in the response (there's only one profile but we have to declare this anyway)
-  purse = profile["members"][uuid]["coin_purse"] # iterate through the branches to the category we want
+  data = fetchData() # calls the function and declares the response as a variable
+  profile = data["profiles"][0] # view the first profile (there's only one profile but we have to declare this anyway)
+  purse = profile["members"][uuid]["coin_purse"] # iterate through the list to the category we want
   print(purse)
+
+
+def returnSkillXP(): # returns how much exp is needed per level for each skill
+  data = req.get("https://api.hypixel.net/resources/skyblock/skills").json() # no key or uuid required as this is hard coded, publically accesible data
+  
+  skillExp = { # dictionary to store the key (skill name) and value (level + exp required) data retrieved from the above endpoint
+    "foraging": [
+            {"level": level["level"], "expRequired": level["totalExpRequired"]} # uses list comprehension. For each iteration of the line below, a new dictionary is made
+            # with the combined level and exp required. This is collected in to a list and assigned to the skill key
+            for level in data["skills"]["FORAGING"]["levels"] # iterates over each level and evaluates the above expression
+            ],
+    "runecrafting": [
+      {"level": level["level"], "expRequired": level["totalExpRequired"]}
+            for level in data["skills"]["RUNECRAFTING"]["levels"]
+            ],
+    "taming": [
+      {"level": level["level"], "expRequired": level["totalExpRequired"]}
+            for level in data["skills"]["TAMING"]["levels"]
+            ],
+    "Combat": [
+      {"level": level["level"], "expRequired": level["totalExpRequired"]}
+            for level in data["skills"]["COMBAT"]["levels"]
+    ],
+    "enchanting": [
+      {"level": level["level"], "expRequired": level["totalExpRequired"]}
+            for level in data["skills"]["ENCHANTING"]["levels"]
+    ],
+    "fishing": [
+      {"level": level["level"], "expRequired": level["totalExpRequired"]}
+            for level in data["skills"]["FISHING"]["levels"]
+            ],
+    "farming": [
+      {"level": level["level"], "expRequired": level["totalExpRequired"]}
+            for level in data["skills"]["FARMING"]["levels"]
+            ],
+    "mining": [
+      {"level": level["level"], "expRequired": level["totalExpRequired"]}
+            for level in data["skills"]["MINING"]["levels"]
+            ]
+  }
+  return(skillExp)
     
 def skillLevels():
   data = fetchData()
@@ -44,9 +86,11 @@ def skillLevels():
     
   for skill, Exp in skills.items(): # iterate through each key-value pair within the skills dictionary. Each iteration applies a key (skill) and applies a value (xp) to this 
       table.add_row([skill, Exp]) # adds a row for each of the key-value pairs iterated in the above line
-
-  print(table) # prints the table instead of the raw values
   
+  print(table) # prints the table instead of the raw values
+  returnSkillXP() # change this later!
+  
+
 
 def main(): # menu function
   open=True
